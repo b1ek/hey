@@ -1,5 +1,6 @@
 # hey!
 `hey` is a command line tool to contact DuckDuckGo Chat API from your terminal.
+based on [this article](https://blek.codes/blog/duckduckgo-ai-chat/)
 
 like this:
 
