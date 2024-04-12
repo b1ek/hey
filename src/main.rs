@@ -155,10 +155,10 @@ struct Args {
 async fn main() {
     femme::start();
 
-    println!("{GREEN}Contacting DuckDuckGo chat AI...{RESET}");
-
     let args = Args::parse();
     let query = args.query.join(" ");
+
+    println!("{GREEN}Contacting DuckDuckGo chat AI...{RESET}");
 
     let mut cache = Cache::load().unwrap();
 
