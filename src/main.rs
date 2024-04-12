@@ -54,6 +54,7 @@ fn get_headers() -> HeaderMap {
     map.insert("Sec-Fetch-Dest", HeaderValue::from_static("empty"));
     map.insert("Sec-Fetch-Mode", HeaderValue::from_static("cors"));
     map.insert("Sec-Fetch-Site", HeaderValue::from_static("same-origin"));
+    map.insert("TE", HeaderValue::from_static("trailers"));
 
     map
 }
@@ -68,11 +69,13 @@ async fn simulate_browser_reqs(cli: &Client) -> Result<(), Box<dyn Error>> {
 }
 
 async fn get_vqd(cli: &Client) -> Result<String, Box<dyn Error>> {
+
+    let mut headers = get_headers();
+    headers.insert("Cache-Control", HeaderValue::from_static("no-store"));
+    headers.insert("x-vqd-accept", HeaderValue::from_static("1"));
+
     let req = cli.get("https://duckduckgo.com/duckchat/v1/status")
-        .headers(get_headers())
-        .header("Cache-Control", "no-store")
-        .header("x-vqd-accept", "1")
-        .header("TE", "trailers")
+        .headers(headers)
         .build()?;
 
     let res = cli.execute(req).await?;
@@ -85,8 +88,17 @@ async fn get_vqd(cli: &Client) -> Result<String, Box<dyn Error>> {
     }
 }
 
-async fn get_res(cli: &Client, payload: String, vqd: String) {
+async fn get_res(cli: &Client, query: String, vqd: String) {
+    let payload = ChatPayload {
+        model: "claude-instant-1.2".into(),
+        messages: vec![ ChatMessagePayload { role: "user".into(), content: query } ]
+    };
+    let payload = serde_json::to_string(&payload).unwrap();
+
+    // println!("{payload}\n\n{:#?}", headers);return;
+
     let req = cli.post("https://duckduckgo.com/duckchat/v1/chat")
+        // .headers(get_headers())
         .header("Content-Type", "application/json")
         .header("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0")
         .header("x-vqd-4", vqd)
@@ -133,7 +145,7 @@ async fn main() {
     let query = args.query.join(" ");
 
     let cli = Client::new();
-    simulate_browser_reqs(&cli).await.unwrap();
+    // simulate_browser_reqs(&cli).await.unwrap();
     let vqd = get_vqd(&cli).await.unwrap();
     get_res(&cli, query, vqd).await;
 
