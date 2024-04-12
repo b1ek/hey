@@ -1,12 +1,17 @@
-use std::{collections::HashMap, error::Error, hash::Hash, process::exit};
+use std::{error::Error, process::exit};
 
 use reqwest::{header::{HeaderMap, HeaderValue}, Client};
 use serde::{Deserialize, Serialize};
 
 use clap::Parser;
 
+use crate::cache::Cache;
+
+mod cache;
+
 const GREEN: &str = "\x1b[1;32m";
 const RED:   &str = "\x1b[1;31m";
+const WARN:  &str = "\x1b[1;34m";
 const RESET: &str = "\x1b[0m";
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -88,7 +93,7 @@ async fn get_vqd(cli: &Client) -> Result<String, Box<dyn Error>> {
     }
 }
 
-async fn get_res(cli: &Client, query: String, vqd: String) {
+async fn get_res<'a>(cli: &Client, query: String, vqd: String, cache: &'a mut Cache) {
     let payload = ChatPayload {
         model: "claude-instant-1.2".into(),
         messages: vec![ ChatMessagePayload { role: "user".into(), content: query } ]
@@ -101,11 +106,22 @@ async fn get_res(cli: &Client, query: String, vqd: String) {
         // .headers(get_headers())
         .header("Content-Type", "application/json")
         .header("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0")
-        .header("x-vqd-4", vqd)
+        .header("x-vqd-4", vqd.clone())
         .body(payload)
         .build().unwrap();
 
     let mut res = cli.execute(req).await.unwrap();
+    let new_vqd = res.headers().iter().find(|x| x.0 == "x-vqd-4");
+    let vqd_set_res = 
+        if let Some(new_vqd) = new_vqd {
+            cache.set_last_vqd(new_vqd.1.as_bytes().iter().map(|x| char::from(*x)).collect::<String>())
+        } else {
+            eprintln!("{WARN}Warn: DuckDuckGo did not return new VQD. Ignore this if everything else is ok.{RESET}");
+            cache.set_last_vqd(vqd.clone())
+        };
+    if let Err(err) = vqd_set_res {
+        eprintln!("{WARN}Warn: Could not save VQD to cache: {err}{RESET}");
+    }
 
     while let Some(chunk) = res.chunk().await.unwrap() {
 
@@ -144,9 +160,16 @@ async fn main() {
     let args = Args::parse();
     let query = args.query.join(" ");
 
+    let mut cache = Cache::load().unwrap();
+
     let cli = Client::new();
-    // simulate_browser_reqs(&cli).await.unwrap();
-    let vqd = get_vqd(&cli).await.unwrap();
-    get_res(&cli, query, vqd).await;
+    simulate_browser_reqs(&cli).await.unwrap();
+
+    let vqd = match cache.get_last_vqd() {
+        Some(v) => { println!("using cached vqd"); v},
+        None => get_vqd(&cli).await.unwrap()
+    };
+
+    get_res(&cli, query, vqd, &mut cache).await;
 
 }
