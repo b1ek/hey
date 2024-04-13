@@ -32,7 +32,7 @@ impl Cache {
     }
 
     pub fn get_file_name<T: From<String>>() -> T {
-        match env::var("HEY_CACHE_PATH") {
+        match env::var("HEY_CACHE_FILENAME") {
             Ok(v) => v,
             Err(_) => "cache.json".into()
         }.into()
