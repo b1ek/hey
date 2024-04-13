@@ -1,17 +1,19 @@
-use std::{error::Error, process::exit};
+use std::{error::Error, path::PathBuf, process::exit};
 
 use reqwest::{header::{HeaderMap, HeaderValue}, Client};
 use serde::{Deserialize, Serialize};
 
 use clap::Parser;
+use std::io::{stdout, IsTerminal};
 
-use crate::cache::Cache;
+use crate::{cache::Cache, config::Config};
 
 mod cache;
+mod config;
 
 const GREEN: &str = "\x1b[1;32m";
 const RED:   &str = "\x1b[1;31m";
-const WARN:  &str = "\x1b[1;34m";
+const WARN:  &str = "\x1b[33m";
 const RESET: &str = "\x1b[0m";
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -145,22 +147,46 @@ async fn get_res<'a>(cli: &Client, query: String, vqd: String, cache: &'a mut Ca
 
 #[derive(Debug, Parser)]
 #[command(version, about, long_about = None)]
-#[clap(trailing_var_arg=true)]
 struct Args {
+    #[arg(long, default_value = "false", required = false, help = "If you want to agree to the DuckDuckGo TOS")]
+    pub agree_tos: bool,
     #[arg()]
-    pub query: Vec<String>
+    pub query: Vec<String>,
 }
 
 #[tokio::main]
 async fn main() {
     femme::start();
+    
+    if ! stdout().is_terminal() {
+        eprintln!("{RED}Refusing to run in a non-terminal environment{RESET}");
+        eprintln!("This is done to prevent API scraping.");
+        exit(2)
+    }
 
     let args = Args::parse();
     let query = args.query.join(" ");
 
-    println!("{GREEN}Contacting DuckDuckGo chat AI...{RESET}");
-
     let mut cache = Cache::load().unwrap();
+    let mut config = Config::load().unwrap();
+
+    if args.agree_tos {
+        if ! config.tos {
+            println!("{GREEN}TOS accepted{RESET}");
+        }
+        config.tos = true;
+        config.save().expect("Error saving config");
+    }
+
+    if ! config.tos {
+        eprintln!("{RED}You need to agree to duckduckgo AI chat TOS to continue.{RESET}");
+        eprintln!("{RED}Visit it on this URL: https://duckduckgo.com/?q=duckduckgo+ai+chat&ia=chat{RESET}");
+        eprintln!("Once you read it, pass --agree-tos parameter to agree.");
+        eprintln!("{WARN}Note: if you want to, modify `tos` parameter in {}{RESET}", Config::get_path::<PathBuf>().join(Config::get_file_name::<String>()).display());
+        exit(3);
+    }
+
+    println!("{GREEN}Contacting DuckDuckGo chat AI...{RESET}");
 
     let cli = Client::new();
     simulate_browser_reqs(&cli).await.unwrap();
