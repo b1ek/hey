@@ -13,6 +13,7 @@ mod config;
 
 const GREEN: &str = "\x1b[1;32m";
 const RED:   &str = "\x1b[1;31m";
+const BLUE:  &str = "\x1b[34m";
 const WARN:  &str = "\x1b[33m";
 const RESET: &str = "\x1b[0m";
 
@@ -180,7 +181,7 @@ async fn main() {
 
     if ! config.tos {
         eprintln!("{RED}You need to agree to duckduckgo AI chat TOS to continue.{RESET}");
-        eprintln!("{RED}Visit it on this URL: https://duckduckgo.com/?q=duckduckgo+ai+chat&ia=chat{RESET}");
+        eprintln!("{RED}Visit it on this URL: {RESET}{BLUE}https://duckduckgo.com/?q=duckduckgo+ai+chat&ia=chat{RESET}");
         eprintln!("Once you read it, pass --agree-tos parameter to agree.");
         eprintln!("{WARN}Note: if you want to, modify `tos` parameter in {}{RESET}", Config::get_path::<PathBuf>().join(Config::get_file_name::<String>()).display());
         exit(3);
