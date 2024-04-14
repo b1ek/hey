@@ -36,3 +36,11 @@ sudo cp target/release/hey /usr/bin/hey,
 ```
 
 if you are on windows, idk have fun
+
+## via a package manager
+
+arch (AUR) - `paru -S hey-duck`
+
+### note for packagers
+to avoid name conflicts, packages should be named `hey-duck` or its form in a different naming convention.  
+please submit an issue or a PR if you have packaged this to a distro, or email one of the maintainers.
