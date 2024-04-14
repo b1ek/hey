@@ -96,14 +96,12 @@ async fn get_vqd(cli: &Client) -> Result<String, Box<dyn Error>> {
     }
 }
 
-async fn get_res<'a>(cli: &Client, query: String, vqd: String, cache: &'a mut Cache) {
+async fn get_res<'a>(cli: &Client, query: String, vqd: String, cache: &'a mut Cache, config: &Config) {
     let payload = ChatPayload {
-        model: "claude-instant-1.2".into(),
+        model: config.model.to_string(),
         messages: vec![ ChatMessagePayload { role: "user".into(), content: query } ]
     };
     let payload = serde_json::to_string(&payload).unwrap();
-
-    // println!("{payload}\n\n{:#?}", headers);return;
 
     let req = cli.post("https://duckduckgo.com/duckchat/v1/chat")
         // .headers(get_headers())
@@ -197,6 +195,6 @@ async fn main() {
         None => get_vqd(&cli).await.unwrap()
     };
 
-    get_res(&cli, query, vqd, &mut cache).await;
+    get_res(&cli, query, vqd, &mut cache, &config).await;
 
 }

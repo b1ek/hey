@@ -11,6 +11,15 @@ pub enum Model {
     GPT35,
 }
 
+impl ToString for Model {
+    fn to_string(&self) -> String {
+        match self {
+            Self::Claude12 => String::from("claude-instant-1.2"),
+            Self::GPT35 => String::from("gpt-3.5-turbo-0125"),
+        }
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Config {
     pub model: Model,
