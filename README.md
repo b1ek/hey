@@ -44,3 +44,19 @@ arch (AUR) - `paru -S hey-duck`
 ### note for packagers
 to avoid name conflicts, packages should be named `hey-duck` or its form in a different naming convention.  
 please submit an issue or a PR if you have packaged this to a distro, or email one of the maintainers.
+
+# configuration & cache
+there is a config file in `~/.config/hey/conf.toml` and a cache file in `~/.cache/hey/cache.json`
+
+you can set their paths and filenames via `HEY_CONFIG_PATH`, `HEY_CONFIG_FILENAME` and `HEY_CACHE_PATH`, `HEY_CACHE_FILENAME`.
+
+## config file reference
+```toml
+model = "claude-instant-1.2" # or "gpt-3.5-turbo-0125"
+tos = false # whether if you agree to ddg chat tos
+```
+
+## cache file reference
+cache file stores the last VQD used. it is (probably) there so that the ai model would remember your history. [read more about duckduckgo chat api](https://blek.codes/blog/duckduckgo-ai-chat/)
+
+if you want to reset the VQD, just delete the file.
