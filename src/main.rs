@@ -34,9 +34,7 @@ struct ChatChunk {
     pub role: String,
     pub message: String,
     pub created: u64,
-    pub id: String,
     pub action: String,
-    pub model: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -50,7 +48,7 @@ struct ErrChatChunk {
 fn get_headers() -> HeaderMap {
     let mut map = HeaderMap::new();
     map.insert("Host", HeaderValue::from_static("duckduckgo.com"));
-    map.insert("Accept", HeaderValue::from_static("*/*"));
+    map.insert("Accept", HeaderValue::from_static("text/event-stream"));
     map.insert("Accept-Language", HeaderValue::from_static("en-US,en;q=0.5"));
     map.insert("Accept-Encoding", HeaderValue::from_static("gzip, deflate, br"));
     map.insert("Referer", HeaderValue::from_static("https://duckduckgo.com/"));
@@ -58,7 +56,7 @@ fn get_headers() -> HeaderMap {
     map.insert("DNT", HeaderValue::from_static("1"));
     map.insert("Sec-GPC", HeaderValue::from_static("1"));
     map.insert("Connection", HeaderValue::from_static("keep-alive"));
-    map.insert("Cookie", HeaderValue::from_static("dcm=3"));
+    map.insert("Cookie", HeaderValue::from_static("dcm=3; ay=b"));
     map.insert("Sec-Fetch-Dest", HeaderValue::from_static("empty"));
     map.insert("Sec-Fetch-Mode", HeaderValue::from_static("cors"));
     map.insert("Sec-Fetch-Site", HeaderValue::from_static("same-origin"));
@@ -104,7 +102,6 @@ async fn get_res<'a>(cli: &Client, query: String, vqd: String, cache: &'a mut Ca
     let payload = serde_json::to_string(&payload).unwrap();
 
     let req = cli.post("https://duckduckgo.com/duckchat/v1/chat")
-        // .headers(get_headers())
         .header("Content-Type", "application/json")
         .header("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0")
         .header("x-vqd-4", vqd.clone())
