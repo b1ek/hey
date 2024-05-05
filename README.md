@@ -52,7 +52,7 @@ you can set their paths and filenames via `HEY_CONFIG_PATH`, `HEY_CONFIG_FILENAM
 
 ## config file reference
 ```toml
-model = "claude-instant-1.2" # or "gpt-3.5-turbo-0125"
+model = "Claude" # or "GPT3"
 tos = false # whether if you agree to ddg chat tos
 ```
 
