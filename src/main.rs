@@ -31,10 +31,12 @@ struct ChatPayload {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 struct ChatChunk {
-    pub role: String,
+    pub role: Option<String>,
     pub message: String,
     pub created: u64,
     pub action: String,
+    pub id: Option<String>,
+    pub model: Option<String>
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
