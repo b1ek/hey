@@ -5,17 +5,20 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Model {
-    #[serde(rename = "claude-instant-1.2")]
     Claude12,
-    #[serde(rename = "gpt-3.5-turbo-0125")]
     GPT35,
+    Claude,
+    GPT3,
 }
 
 impl ToString for Model {
     fn to_string(&self) -> String {
         match self {
-            Self::Claude12 => String::from("claude-instant-1.2"),
-            Self::GPT35 => String::from("gpt-3.5-turbo-0125"),
+            Self::Claude12 => panic!("Your config is outdated! Please delete your ~/.config/hey directory"),
+            Self::GPT35 => panic!("Your config is outdated! Please delete your ~/.config/hey directory"),
+            
+            Self::Claude => String::from("claude-3-haiku-20240307"),
+            Self::GPT3 => String::from("gpt-3.5-turbo-0125"),
         }
     }
 }
@@ -29,7 +32,7 @@ pub struct Config {
 impl Default for Config {
     fn default() -> Self {
         Self {
-            model: Model::Claude12,
+            model: Model::Claude,
             tos: false
         }
     }
@@ -76,7 +79,10 @@ impl Config {
         if ! file_path.is_file() {
             Ok(Self::default())
         } else {
-            Ok(toml::from_str(&fs::read_to_string(file_path)?)?)
+            let conf: Config = toml::from_str(&fs::read_to_string(file_path)?)?;
+            conf.model.to_string(); // so that it would panic if the config is outdated
+            
+            Ok(conf)
         }
     }
 }
