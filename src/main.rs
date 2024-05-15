@@ -49,6 +49,7 @@ async fn main() {
         }
         config.tos = true;
         config.save().expect("Error saving config");
+        exit(0);
     }
 
     if ! config.tos {
