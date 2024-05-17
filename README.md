@@ -6,6 +6,13 @@ demo:
 
 <p align=center><img src='hey-demo.gif' alt='a gif demostrating a prompt about a bedtime story' width=1000></p>
 
+# disclaimer
+to clarify, as of may 17 2024, using a third party client [does not violate the ToS](https://duckduckgo.com/aichat/privacy-terms).
+
+by using this client, you acknowledge that you will be liable for any ToS violations as per GPLv3
+
+this project is not intended for API scraping purposes, and actually [has a soft protection against it](https://git.blek.codes/blek/hey/src/branch/main/src/main.rs#L34).
+
 # installation
 if you run linux or macos,
 ```sh
