@@ -1,0 +1,61 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+    - name: Build
+      run: cargo build --release
+    - name: Upload Linux Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: hey-linux
+        path: target/release/hey
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+    - name: Build
+      run: cargo build --release
+    - name: Upload macOS Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: hey-macos
+        path: target/release/hey
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+    - name: Build
+      run: cargo build --release
+    - name: Upload Windows Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: hey-windows
+        path: target/release/hey.exe
