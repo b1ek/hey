@@ -31,6 +31,9 @@ arch (AUR) - `paru -S hey-duck`
 ## download the binary file
 prebuilt binaries are available on [the releases page](https://git.blek.codes/blek/hey/releases) for macOS, Linux and Windows
 
+## development version
+look around [on github actions](https://github.com/b1ek/hey/actions), select the latest one, scroll all the way down and then download an artifact for your platform 
+
 ### note for packagers
 to avoid name conflicts, packages should be named `hey-duck` or its form in a different naming convention.  
 please submit an issue or a PR if you have packaged this to a distro, or email one of the maintainers.
