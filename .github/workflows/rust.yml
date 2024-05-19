@@ -3,8 +3,18 @@ name: Build development version
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - .github/**
+      - src/**
+      - Cargo.toml
+      - Cargo.lock
   pull_request:
     branches: [ "main" ]
+    paths:
+      - .github/**
+      - src/**
+      - Cargo.toml
+      - Cargo.lock
   workflow_dispatch:
 
 jobs:
