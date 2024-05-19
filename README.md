@@ -22,11 +22,14 @@ cargo b -r
 sudo cp target/release/hey /usr/bin/hey,
 ```
 
-if you are on windows, idk have fun
+if you are on windows, [download the binary file](#download-the-binary-file) or compile it yourself if you have the knowledge
 
 ## via a package manager
 
 arch (AUR) - `paru -S hey-duck`
+
+## download the binary file
+prebuilt binaries are available on [the releases page](https://git.blek.codes/blek/hey/releases) for macOS, Linux and Windows
 
 ### note for packagers
 to avoid name conflicts, packages should be named `hey-duck` or its form in a different naming convention.  
