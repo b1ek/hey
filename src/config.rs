@@ -5,10 +5,15 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Model {
+    // outdated
     Claude12,
     GPT35,
+
+    // current
     Claude,
     GPT3,
+    Llama,
+    Mixtral
 }
 
 impl ToString for Model {
@@ -19,6 +24,8 @@ impl ToString for Model {
             
             Self::Claude => String::from("claude-3-haiku-20240307"),
             Self::GPT3 => String::from("gpt-3.5-turbo-0125"),
+            Self::Llama => String::from("meta-llama/Llama-3-70b-chat-hf"),
+            Self::Mixtral => String::from("mistralai/Mixtral-8x7B-Instruct-v0.1")
         }
     }
 }
