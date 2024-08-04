@@ -13,7 +13,8 @@ pub enum Model {
     Claude,
     GPT3,
     Llama,
-    Mixtral
+    Mixtral,
+    GPT4OMini
 }
 
 impl ToString for Model {
@@ -25,7 +26,8 @@ impl ToString for Model {
             Self::Claude => String::from("claude-3-haiku-20240307"),
             Self::GPT3 => String::from("gpt-3.5-turbo-0125"),
             Self::Llama => String::from("meta-llama/Llama-3-70b-chat-hf"),
-            Self::Mixtral => String::from("mistralai/Mixtral-8x7B-Instruct-v0.1")
+            Self::Mixtral => String::from("mistralai/Mixtral-8x7B-Instruct-v0.1"),
+            Self::GPT4OMini => String::from("gpt-4-0125-preview")
         }
     }
 }
