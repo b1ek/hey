@@ -45,7 +45,7 @@ you can set their paths and filenames via `HEY_CONFIG_PATH`, `HEY_CONFIG_FILENAM
 
 ## config file reference
 ```toml
-model = "Claude" # or "GPT3"
+model = "Claude" # or "GPT4OMini"
 tos = false # whether if you agree to ddg chat tos
 ```
 

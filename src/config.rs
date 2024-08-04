@@ -8,13 +8,13 @@ pub enum Model {
     // outdated
     Claude12,
     GPT35,
+    GPT3,
 
     // current
     Claude,
-    GPT3,
+    GPT4OMini,
     Llama,
-    Mixtral,
-    GPT4OMini
+    Mixtral
 }
 
 impl ToString for Model {
