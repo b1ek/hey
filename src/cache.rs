@@ -77,10 +77,5 @@ impl Cache {
 
     pub fn get_last_vqd<'a, T: From<&'a String>>(self: &'a Self) -> Option<T> {
         None
-        /*if self.last_vqd_time - (chrono::Local::now().timestamp_millis() as u64) < 60000 {
-            Some((&self.last_vqd).into())
-        } else {
-            None
-        } */
     }
 }
